@@ -129,7 +129,7 @@ class TcpRlAgent:
                 self.dqn.learn()
 
         # choose action
-        self.a = self.dqn.choose_action(obs)
+        self.a = self.dqn.choose_action(self.s_)
         if self.a & 1:
             self.new_cWnd = cWnd + segmentSize
         else:
