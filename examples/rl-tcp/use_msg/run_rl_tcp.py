@@ -16,6 +16,7 @@
 #
 # Author: Pengyu Liu <eic_lpy@hust.edu.cn>
 #         Hao Yin <haoyin@uw.edu>
+# Modify: Muyuan Shen
 
 import os
 import torch
@@ -29,11 +30,12 @@ import ns3ai_rltcp_msg_py as ns3ai_msg
 def get_agent(socketUuid, useRl):
     agent = get_agent.tcpAgents.get(socketUuid)
     if agent is None:
-        print("new agent, uuid = {}".format(socketUuid))
         if useRl:
             agent = TcpRlAgent()
+            print("new RL agent, uuid = {}".format(socketUuid))
         else:
             agent = TcpNewRenoAgent()
+            print("new New Reno agent, uuid = {}".format(socketUuid))
         get_agent.tcpAgents[socketUuid] = agent
 
     return agent
@@ -57,16 +59,15 @@ if __name__ == '__main__':
                         help='whether use rl algorithm')
 
     args = parser.parse_args()
-    res_list = ['ssThresh_l', 'cWnd_l', 'segmentsAcked_l',
-                'segmentSize_l', 'bytesInFlight_l']
-
     my_seed = 42
     if args.seed:
         my_seed = args.seed
-    print("Using random seed {} for reproducibility.".format(my_seed))
+    print("Python side random seed {}".format(my_seed))
     np.random.seed(my_seed)
     torch.manual_seed(my_seed)
 
+    res_list = ['ssThresh_l', 'cWnd_l', 'segmentsAcked_l',
+                'segmentSize_l', 'bytesInFlight_l']
     if args.result:
         for res in res_list:
             globals()[res] = []
@@ -77,40 +78,51 @@ if __name__ == '__main__':
     ns3ai = ns3ai_msg.Ns3AiMsgInterface(True, False, True, 4096, "My Seg", "My Cpp to Python Msg", "My Python to Cpp Msg", "My Lockable")
     print('Created message interface, waiting for C++ side to send initial environment...')
 
-    while True:
-        # receive observation from C++
-        ns3ai.py_recv_begin()
-        if ns3ai.py_get_finished():
-            break
-        ssThresh = ns3ai.m_single_cpp2py_msg.ssThresh
-        cWnd = ns3ai.m_single_cpp2py_msg.cWnd
-        segmentsAcked = ns3ai.m_single_cpp2py_msg.segmentsAcked
-        segmentSize = ns3ai.m_single_cpp2py_msg.segmentSize
-        bytesInFlight = ns3ai.m_single_cpp2py_msg.bytesInFlight
-        socketId = ns3ai.m_single_cpp2py_msg.socketUid
-        ns3ai.py_recv_end()
+    stepIdx = 0
 
-        obs = [ssThresh, cWnd, segmentsAcked, segmentSize, bytesInFlight]
-        if args.show_log:
-            print("Recv obs:", obs)
+    try:
+        while True:
+            # receive observation from C++
+            ns3ai.py_recv_begin()
+            if ns3ai.py_get_finished():
+                print("Simulation ended")
+                break
+            ssThresh = ns3ai.m_single_cpp2py_msg.ssThresh
+            cWnd = ns3ai.m_single_cpp2py_msg.cWnd
+            segmentsAcked = ns3ai.m_single_cpp2py_msg.segmentsAcked
+            segmentSize = ns3ai.m_single_cpp2py_msg.segmentSize
+            bytesInFlight = ns3ai.m_single_cpp2py_msg.bytesInFlight
+            socketId = ns3ai.m_single_cpp2py_msg.socketUid
+            ns3ai.py_recv_end()
 
-        if args.result:
-            for res in res_list:
-                globals()[res].append(globals()[res[:-2]])
+            obs = [ssThresh, cWnd, segmentsAcked, segmentSize, bytesInFlight]
+            if args.show_log:
+                print("Recv obs:", obs)
 
-        tcpAgent = get_agent(socketId, args.use_rl)
-        act = tcpAgent.get_action(obs)
-        new_cWnd = act[0]
-        new_ssThresh = act[1]
+            if args.result:
+                for res in res_list:
+                    globals()[res].append(globals()[res[:-2]])
 
-        # send action to C++
-        ns3ai.py_send_begin()
-        ns3ai.m_single_py2cpp_msg.new_cWnd = new_cWnd
-        ns3ai.m_single_py2cpp_msg.new_ssThresh = new_ssThresh
-        ns3ai.py_send_end()
+            tcpAgent = get_agent(socketId, args.use_rl)
+            act = tcpAgent.get_action(obs)
+            new_cWnd = act[0]
+            new_ssThresh = act[1]
 
-        if args.show_log:
-            print("Send act:", act)
+            # send action to C++
+            ns3ai.py_send_begin()
+            ns3ai.m_single_py2cpp_msg.new_cWnd = new_cWnd
+            ns3ai.m_single_py2cpp_msg.new_ssThresh = new_ssThresh
+            ns3ai.py_send_end()
+
+            if args.show_log:
+                print("Step:", stepIdx)
+                stepIdx += 1
+                print("Send act:", act)
+
+    except KeyboardInterrupt:
+        print("Ctrl-C -> Exit")
+    finally:
+        del ns3ai
 
     if args.result:
         for res in res_list:
@@ -121,5 +133,3 @@ if __name__ == '__main__':
             plt.xlabel('Step Number')
             plt.title('Information of {}'.format(res[:-2]))
             plt.savefig('{}.png'.format(os.path.join(args.result_dir, res[:-2])))
-
-    del ns3ai
