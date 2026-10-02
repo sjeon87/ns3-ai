@@ -75,7 +75,6 @@ class SeqTsSizeFragHeader : public SeqTsSizeHeader
     uint16_t GetFrags(void) const;
 
     // Inherited
-    virtual TypeId GetInstanceTypeId(void) const override;
     virtual void Print(std::ostream& os) const override;
     virtual uint32_t GetSerializedSize(void) const override;
     virtual void Serialize(Buffer::Iterator start) const override;
