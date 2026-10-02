@@ -45,12 +45,6 @@ SeqTsSizeFragHeader::GetTypeId(void)
     return tid;
 }
 
-TypeId
-SeqTsSizeFragHeader::GetInstanceTypeId(void) const
-{
-    return GetTypeId();
-}
-
 void
 SeqTsSizeFragHeader::SetFragSeq(uint16_t fragSeq)
 {
