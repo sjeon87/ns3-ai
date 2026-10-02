@@ -171,7 +171,7 @@ protobuf_generate(
 )
 
 build_lib(
-        LIBNAME ns3-ai-ntn
+        LIBNAME ns3-ai
         SOURCE_FILES
             ${msg_interface_srcs}
             ${gym_interface_srcs}
@@ -183,9 +183,9 @@ build_lib(
         LIBRARIES_TO_LINK ${libcore} protobuf::libprotobuf
         TEST_SOURCES ${airan_test_sources}
 )
-# ${libns3-ai-ntn} is set by build_lib; guard against empty
-if(TARGET ${libns3-ai-ntn})
-    add_dependencies(${libns3-ai-ntn} proto-objects)
+# ${libns3-ai} is set by build_lib; guard against empty
+if(TARGET ${libns3-ai})
+    add_dependencies(${libns3-ai} proto-objects)
 elseif(TARGET ai)
     add_dependencies(ai proto-objects)
 endif()

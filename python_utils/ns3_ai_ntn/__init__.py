@@ -1,4 +1,4 @@
-"""ns3-ai-ntn — RL/GNN/MARL extensions for the ns3-ntn-toolkit (Workstream W4).
+"""ns3-ai — RL/GNN/MARL extensions for the ns3-ntn-toolkit (Workstream W4).
 
 Top-level subpackages:
 

@@ -109,7 +109,7 @@ message SimInitMsg {
 	// Added as optional fields, so an old peer that does not set them still
 	// interoperates and simply reports "unknown" rather than failing.
 	string protocolVersion = 3;   // this handshake's own version, e.g. "1"
-	string moduleVersion = 4;     // contrib/ns3-ai-ntn VERSION
+	string moduleVersion = 4;     // contrib/ns3-ai VERSION
 	string schemaHash = 5;        // digest of the obs/act space description
 }
 

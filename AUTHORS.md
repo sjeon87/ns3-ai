@@ -25,7 +25,7 @@ Upstream license: GPL-2.0-only.
   ORCID: 0009-0002-4104-2680
   Added: NTN-specific Gym wrappers, federated-learning harness,
   Flower AI adaptor, NTN handover RL environment, ns-3.43 build fix
-  pack, examples coupling `ns3-ai-ntn` with `ntn-cho` and
+  pack, examples coupling `ns3-ai` with `ntn-cho` and
   `oran-ntn`.
 
 ## Attribution policy
