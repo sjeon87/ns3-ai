@@ -2,7 +2,7 @@
    SPDX-License-Identifier: GPL-2.0-only
    Copyright (c) 2026 Muhammad Uzair and contributors
 
-ns3-ai-ntn Module
+ns3-ai Module
 =================
 
 .. include:: replace.txt
@@ -11,7 +11,7 @@ ns3-ai-ntn Module
 Overview
 --------
 
-``ns3-ai-ntn`` is a fork of the upstream ``ns3-ai`` module
+``ns3-ai`` is a fork of the upstream ``ns3-ai`` module
 (Yin et al., WNS3 2020).  It preserves the shared-memory interface,
 ProtoBuf binding, and Gym-style environment wrapper of upstream, and
 adds:

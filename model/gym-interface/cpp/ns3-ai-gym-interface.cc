@@ -44,7 +44,7 @@ namespace
 /// AI-11: the handshake's own version. Bump when the SHAPE of SimInitMsg /
 /// SimInitAck changes in a way an old peer cannot parse.
 constexpr const char* kNs3AiHandshakeVersion = "1";
-/// contrib/ns3-ai-ntn VERSION. Informational: a mismatch warns, it does not
+/// contrib/ns3-ai VERSION. Informational: a mismatch warns, it does not
 /// refuse, because two trees can differ harmlessly while the wire agrees.
 constexpr const char* kNs3AiModuleVersion = "1.0.0";
 

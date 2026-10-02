@@ -202,9 +202,9 @@ class TritonModelConfigShippedFilesTest : public TestCase
         // We try a couple of standard relative paths so the test works
         // both during in-tree builds and from the install tree.
         const std::vector<std::string> roots = {
-            "contrib/ns3-ai-ntn/grpc/triton/",
-            "../contrib/ns3-ai-ntn/grpc/triton/",
-            "../../contrib/ns3-ai-ntn/grpc/triton/",
+            "contrib/ns3-ai/grpc/triton/",
+            "../contrib/ns3-ai/grpc/triton/",
+            "../../contrib/ns3-ai/grpc/triton/",
         };
         bool found_precoder = false;
         bool found_beam = false;

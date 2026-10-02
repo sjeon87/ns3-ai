@@ -75,13 +75,13 @@ cd ..
 
 ## 3. Install the fork
 
-The module's CMake `LIBNAME` is `ns3-ai-ntn`, so it must be cloned into
-`contrib/ns3-ai-ntn`:
+The module's CMake `LIBNAME` is `ns3-ai`, so it must be cloned into
+`contrib/ns3-ai`:
 
 ```bash
 cd contrib/
 git clone -b fix/ns3-43-compatibility-and-critical-bugs \
-  https://github.com/Muhammaduazir69/ns3-ai.git ns3-ai-ntn
+  https://github.com/Muhammaduazir69/ns3-ai.git ns3-ai
 cd ..
 ```
 
@@ -93,14 +93,14 @@ The fork's CMake helper handles the per-target LTO disable that ns-3.43 needs:
 
 ```bash
 ./ns3 configure --enable-examples --enable-tests
-./ns3 build ns3-ai-ntn
+./ns3 build ns3-ai
 ```
 
 Verify the bridge module is built:
 
 ```bash
-./ns3 show profile | grep ns3-ai-ntn
-ls build/contrib/ns3-ai-ntn/  # build artefacts + the per-example ns3ai_*.so modules
+./ns3 show profile | grep ns3-ai
+ls build/contrib/ns3-ai/  # build artefacts + the per-example ns3ai_*.so modules
 ```
 
 ---
@@ -115,7 +115,7 @@ spawns the matching ns-3 binary itself. Build the example's CMake target first
 
 ```bash
 ./ns3 build ns3ai_apb_gym
-cd contrib/ns3-ai-ntn/examples/a-plus-b/use-gym/
+cd contrib/ns3-ai/examples/a-plus-b/use-gym/
 python3 apb.py     # Python launches the ns-3 binary internally
 ```
 
@@ -126,7 +126,7 @@ variants live in `use-msg-stru/` and `use-msg-vec/` (also `apb.py`).
 
 ```bash
 ./ns3 build ns3ai_ltecqi_msg
-cd contrib/ns3-ai-ntn/examples/lte-cqi/use-msg/
+cd contrib/ns3-ai/examples/lte-cqi/use-msg/
 python3 run_online_lstm.py
 ```
 
@@ -134,7 +134,7 @@ python3 run_online_lstm.py
 
 ```bash
 ./ns3 build ns3ai_multibss
-cd contrib/ns3-ai-ntn/examples/multi-bss/
+cd contrib/ns3-ai/examples/multi-bss/
 python3 run_multi_bss.py
 ```
 
@@ -142,7 +142,7 @@ python3 run_multi_bss.py
 
 ```bash
 ./ns3 build ns3ai_rltcp_gym
-cd contrib/ns3-ai-ntn/examples/rl-tcp/use-gym/
+cd contrib/ns3-ai/examples/rl-tcp/use-gym/
 python3 run_rl_tcp.py
 ```
 
@@ -150,7 +150,7 @@ python3 run_rl_tcp.py
 
 ```bash
 ./ns3 build ns3ai_ratecontrol_ts
-cd contrib/ns3-ai-ntn/examples/rate-control/thompson-sampling/
+cd contrib/ns3-ai/examples/rate-control/thompson-sampling/
 python3 ai_thompson_sampling.py
 ```
 
@@ -168,7 +168,7 @@ silently fabricating measured KPIs. There is no real ns-3 C++ environment
 binary behind them.
 
 ```bash
-cd contrib/ns3-ai-ntn/python_utils
+cd contrib/ns3-ai/python_utils
 pip install -e .[test]
 python3 -c "from ns3_ai_ntn.envs import HandoverEnv; e=HandoverEnv(); e.reset(); print(e.step(0))"
 ```
@@ -188,7 +188,7 @@ real scenario in `contrib/ntn-cho` / `contrib/oran-ntn`.
 ./test.py -s oran-ntn-airan-inference
 
 # Python NTN RL extensions
-cd contrib/ns3-ai-ntn/python_utils
+cd contrib/ns3-ai/python_utils
 pip install -e .[test] && pytest tests/ -v
 ```
 

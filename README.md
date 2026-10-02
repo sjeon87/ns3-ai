@@ -1,4 +1,4 @@
-<h1 align="center">ns3-ai-ntn</h1>
+<h1 align="center">ns3-ai</h1>
 
 <p align="center"><strong>Gymnasium 1.0 environments for NTN radio resource management, over a versioned shared-memory bridge</strong></p>
 
@@ -17,7 +17,7 @@
   &nbsp;·&nbsp;
   <a href="#examples">Examples</a>
   &nbsp;·&nbsp;
-  <a href="https://muhammaduazir69.github.io/ns3-ntn-toolkit/modules/ns3-ai-ntn/">Docs</a>
+  <a href="https://muhammaduazir69.github.io/ns3-ntn-toolkit/modules/ns3-ai/">Docs</a>
 </p>
 
 ---
@@ -35,14 +35,14 @@ The bundled trainers are single-agent PPO and SAC over N independent environment
 Inside the toolkit, where the module is already present and built:
 
 ```bash
-cd contrib/ns3-ai-ntn/examples/a-plus-b/use-gym/ && python3 a-plus-b.py
+cd contrib/ns3-ai/examples/a-plus-b/use-gym/ && python3 a-plus-b.py
 ./ns3 run "oran-ntn-gym-handover-example --gym=1"
 ```
 
 Standalone, into an existing ns-3.43 tree:
 
 ```bash
-git clone -b fix/ns3-43-compatibility-and-critical-bugs https://github.com/Muhammaduazir69/ns3-ai.git contrib/ns3-ai-ntn
+git clone -b fix/ns3-43-compatibility-and-critical-bugs https://github.com/Muhammaduazir69/ns3-ai.git contrib/ns3-ai
 ./ns3 configure --enable-modules='' --enable-examples --enable-tests
 ./ns3 build
 ```
@@ -105,7 +105,7 @@ Upstream [ns3-ai](https://github.com/hust-diangroup/ns3-ai) hasn't tracked the m
 
 ## Install & run
 
-The module ships in `contrib/ns3-ai-ntn` as part of the
+The module ships in `contrib/ns3-ai` as part of the
 [ns3-ntn-toolkit](https://github.com/Muhammaduazir69/ns3-ntn-toolkit). It needs
 **Boost ≥ 1.70** (interprocess + program_options), **pybind11** (CMake config
 package), and **protobuf** — see [INSTALL.md](INSTALL.md) for full setup.
@@ -122,7 +122,7 @@ Quick taste:
 
 # hello-world: C++ side passes numbers to Python over shared memory
 ./ns3 build ns3ai_apb_gym
-cd contrib/ns3-ai-ntn/examples/a-plus-b/use-gym/
+cd contrib/ns3-ai/examples/a-plus-b/use-gym/
 python3 apb.py    # works on Py 3.13 + NumPy 2.0
 ```
 
@@ -147,7 +147,7 @@ Python script drives the simulation: it spawns the matching ns-3 binary itself.
 ./test.py -s oran-ntn-airan-inference
 
 # Python NTN RL extensions
-cd contrib/ns3-ai-ntn/python_utils
+cd contrib/ns3-ai/python_utils
 pip install -e .[test] && pytest tests/ -v
 ```
 
@@ -190,7 +190,7 @@ Original work:
 | ntn-constellation | [ntn-constellation](https://github.com/Muhammaduazir69/ntn-constellation) |
 | ntn-rrc | [ntn-rrc](https://github.com/Muhammaduazir69/ntn-rrc) |
 | ntn-observability | [ntn-observability](https://github.com/Muhammaduazir69/ntn-observability) |
-| **ns3-ai-ntn (this fork)** | this repo |
+| **ns3-ai (this fork)** | this repo |
 | ntn-sagin | [ntn-sagin](https://github.com/Muhammaduazir69/ntn-sagin) |
 | ntn-slice | [ntn-slice](https://github.com/Muhammaduazir69/ntn-slice) |
 | ntn-v2x | [ntn-v2x](https://github.com/Muhammaduazir69/ntn-v2x) |

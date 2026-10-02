@@ -1,4 +1,4 @@
-<h1 align="center">ns3-ai-ntn / python_utils — RL extensions (W4)</h1>
+<h1 align="center">ns3-ai / python_utils — RL extensions (W4)</h1>
 
 <p align="center"><strong>Stable-Baselines3 + PyTorch Geometric + canonical ns3-gym layer for the <a href="https://github.com/Muhammaduazir69/ns3-ntn-toolkit">ns3-ntn-toolkit</a>.</strong></p>
 
@@ -28,7 +28,7 @@ ns3-ntn-toolkit
 ## Install
 
 ```bash
-cd contrib/ns3-ai-ntn/python_utils
+cd contrib/ns3-ai/python_utils
 pip install -e .[all]            # gymnasium + sb3 + pyg
 # or, à la carte:
 pip install -e .[sb3]
@@ -40,7 +40,7 @@ pip install -e .[gnn]
 | Gate | Result |
 |---|---|
 | `gymnasium.utils.env_checker.check_env` on all 4 envs | ✅ pass |
-| `pytest contrib/ns3-ai-ntn/python_utils/tests/` | ✅ 15/15 |
+| `pytest contrib/ns3-ai/python_utils/tests/` | ✅ 15/15 |
 | PPO beats random baseline by >1σ on `HandoverEnv` (10k steps) | ✅ gap 116, σ 27 |
 | GAT next-hop accuracy on 50-node Starlink subset ≥ 70% | ✅ 88% |
 
