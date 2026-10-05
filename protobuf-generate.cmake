@@ -135,10 +135,15 @@ function(protobuf_generate)
       set(_comment "${_comment}, plugin-options: ${_plugin_options}")
     endif()
 
+    set(_output_argument "${protobuf_generate_PROTOC_OUT_DIR}")
+    if(_plugin_options)
+      set(_output_argument "${_plugin_options}:${_output_argument}")
+    endif()
+
     add_custom_command(
       OUTPUT ${_generated_srcs}
       COMMAND protobuf::protoc
-      ARGS ${protobuf_generate_PROTOC_OPTIONS} --${protobuf_generate_LANGUAGE}_out ${_plugin_options}:${protobuf_generate_PROTOC_OUT_DIR} ${_plugin} ${_protobuf_include_path} ${_abs_file}
+      ARGS ${protobuf_generate_PROTOC_OPTIONS} --${protobuf_generate_LANGUAGE}_out ${_output_argument} ${_plugin} ${_protobuf_include_path} ${_abs_file}
       DEPENDS ${_abs_file} ${protobuf_PROTOC_EXE} ${protobuf_generate_DEPENDENCIES}
       COMMENT ${_comment}
       VERBATIM )

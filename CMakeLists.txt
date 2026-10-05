@@ -15,6 +15,8 @@ function(ns3ai_add_pybind_module TARGET_NAME SOURCE_FILE)
 
     pybind11_add_module(${TARGET_NAME} ${SOURCE_FILE})
     target_link_libraries(${TARGET_NAME} PRIVATE ${libcore})
+    add_dependencies(${TARGET_NAME} ns3-ai-proto)
+    target_include_directories(${TARGET_NAME} PRIVATE "${gym_proto_cpp_dir}")
 
     # Restore global LTO setting
     set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ${_saved_ipo})
@@ -114,7 +116,6 @@ set(gym_interface_srcs
         model/gym-interface/cpp/ns3-ai-gym-env.cc
         model/gym-interface/cpp/container.cc
         model/gym-interface/cpp/spaces.cc
-        model/gym-interface/cpp/messages.pb.cc
 )
 set(gym_interface_hdrs
         model/gym-interface/cpp/ns3-ai-gym-interface.h
@@ -147,29 +148,31 @@ set(airan_test_sources
         test/airan-inference-test-suite.cc
 )
 
-# protobuf_generate function is missing in some installations by package manager
-check_function_exists(protobuf_generate protobuf_generate_exists)
-if(${protobuf_generate_exists})
-    message(STATUS "protobuf_generate function found")
-else()
-    message(STATUS "protobuf_generate function not found -> use a local copy from ${CMAKE_CURRENT_SOURCE_DIR}/protobuf-generate.cmake")
+if(NOT COMMAND protobuf_generate)
     include(${CMAKE_CURRENT_SOURCE_DIR}/protobuf-generate.cmake)
 endif()
 
-# Compile proto files
-add_library(proto-objects OBJECT "${CMAKE_CURRENT_SOURCE_DIR}/model/gym-interface/messages.proto")
+set(gym_proto_cpp_dir "${CMAKE_CURRENT_BINARY_DIR}/gym-interface")
+file(MAKE_DIRECTORY "${gym_proto_cpp_dir}")
 protobuf_generate(
-        TARGET proto-objects
+        PROTOS "${CMAKE_CURRENT_SOURCE_DIR}/model/gym-interface/messages.proto"
+        OUT_VAR gym_proto_cpp_sources
+        APPEND_PATH
         IMPORT_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/model/gym-interface"
         LANGUAGE cpp
-        PROTOC_OUT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/model/gym-interface/cpp"
+        PROTOC_OUT_DIR "${gym_proto_cpp_dir}"
 )
 protobuf_generate(
-        TARGET proto-objects
+        PROTOS "${CMAKE_CURRENT_SOURCE_DIR}/model/gym-interface/messages.proto"
+        OUT_VAR gym_proto_python_sources
+        APPEND_PATH
         IMPORT_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/model/gym-interface"
         LANGUAGE python
         PROTOC_OUT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/model/gym-interface/py"
 )
+add_custom_target(ns3-ai-proto DEPENDS ${gym_proto_cpp_sources} ${gym_proto_python_sources})
+list(APPEND gym_interface_srcs ${gym_proto_cpp_sources})
+include_directories(BEFORE "${gym_proto_cpp_dir}")
 
 build_lib(
         LIBNAME ns3-ai
@@ -186,9 +189,10 @@ build_lib(
 )
 # ${libns3-ai} is set by build_lib; guard against empty
 if(TARGET ${libns3-ai})
-    add_dependencies(${libns3-ai} proto-objects)
+    add_dependencies(${libns3-ai} ns3-ai-proto)
+    target_include_directories(${libns3-ai} PUBLIC "$<BUILD_INTERFACE:${gym_proto_cpp_dir}>")
 elseif(TARGET ai)
-    add_dependencies(ai proto-objects)
+    add_dependencies(ai ns3-ai-proto)
 endif()
 
 # Build Gym msg binding module
