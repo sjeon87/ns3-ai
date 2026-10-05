@@ -14,6 +14,7 @@ function(ns3ai_add_pybind_module TARGET_NAME SOURCE_FILE)
     set(CMAKE_INTERPROCEDURAL_OPTIMIZATION OFF)
 
     pybind11_add_module(${TARGET_NAME} ${SOURCE_FILE})
+    target_link_libraries(${TARGET_NAME} PRIVATE ${libcore})
 
     # Restore global LTO setting
     set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ${_saved_ipo})
