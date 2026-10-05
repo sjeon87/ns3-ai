@@ -20,6 +20,8 @@
 
 #include "inference-channel.h"
 
+#include "ns3/system-socket.h"
+
 #include <atomic>
 #include <memory>
 #include <vector>
@@ -35,25 +37,31 @@ class TcpInferenceChannel : public InferenceChannel
 {
   public:
     TcpInferenceChannel();
-    explicit TcpInferenceChannel(int fd); // adopt an open fd
+    explicit TcpInferenceChannel(SystemSocket::Handle fd); // adopt an open fd
     ~TcpInferenceChannel() override;
 
     /// Open as a client: connect to host:port.
     bool ConnectTo(const std::string& host, uint16_t port);
 
     bool Send(const std::vector<uint8_t>& bytes) override;
-    bool TryRecv(std::vector<uint8_t>& bytes,
-                 uint32_t timeout_ms) override;
+    bool TryRecv(std::vector<uint8_t>& bytes, uint32_t timeout_ms) override;
     bool IsOpen() const override;
     void Close() override;
-    std::string Kind() const override { return "tcp"; }
 
-    int Fd() const { return m_fd; }
+    std::string Kind() const override
+    {
+        return "tcp";
+    }
+
+    SystemSocket::Handle Fd() const
+    {
+        return m_fd;
+    }
 
   private:
     bool RecvExact(uint8_t* out, size_t n, uint32_t timeout_ms);
 
-    int m_fd{-1};
+    SystemSocket::Handle m_fd{-1};
     std::vector<uint8_t> m_rxStash; // partial RX state between calls
 };
 
@@ -67,22 +75,31 @@ class TcpInferenceListener
     ~TcpInferenceListener();
 
     /// Bind + listen on host:port (host "" or "0.0.0.0" = wildcard).
-    bool Listen(const std::string& host,
-                uint16_t port,
-                int backlog = 8);
+    bool Listen(const std::string& host, uint16_t port, int backlog = 8);
 
     /// Try to accept one connection. Returns nullptr on timeout.
     std::unique_ptr<TcpInferenceChannel> AcceptOne(uint32_t timeout_ms);
 
     /// Resolved listening port (useful for `port=0` ephemeral binds).
-    uint16_t LocalPort() const { return m_port; }
+    uint16_t LocalPort() const
+    {
+        return m_port;
+    }
 
-    bool IsOpen() const { return m_fd >= 0; }
+    bool IsOpen() const
+    {
+        return m_fd >= 0;
+    }
+
     void Close();
-    int Fd() const { return m_fd; }
+
+    SystemSocket::Handle Fd() const
+    {
+        return m_fd;
+    }
 
   private:
-    int m_fd{-1};
+    SystemSocket::Handle m_fd{-1};
     uint16_t m_port{0};
 };
 
