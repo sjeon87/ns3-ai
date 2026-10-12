@@ -22,12 +22,12 @@ dependencies = [
 sb3 = ["stable-baselines3>=2.3", "torch>=2.1"]
 gnn = ["torch>=2.1", "torch-geometric>=2.5"]
 marl = ["stable-baselines3>=2.3", "torch>=2.1"]
-ns3gym = ["protobuf>=4.25", "zmq>=0.0.0"]
+ns3gym = ["protobuf>=6.33.4", "zmq>=0.0.0"]
 all = [
     "stable-baselines3>=2.3",
     "torch>=2.1",
     "torch-geometric>=2.5",
-    "protobuf>=4.25",
+    "protobuf>=6.33.4",
 ]
 test = ["pytest>=8", "stable-baselines3>=2.3", "torch>=2.1"]
 
